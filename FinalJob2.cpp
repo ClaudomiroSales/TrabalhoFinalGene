@@ -26,7 +26,7 @@ void print( const individual &, int, bool );
 void print( const product & );
 void print( const bool [ ], int );
 bool generateGene( );
-void selectInd( vector< individual > &, vector< int > &,  int );
+void selectInd( vector< individual > &, vector< int > &,  int, bool = true );
 void crossGene( bool [ ], bool [ ], int, int );
 void mutateGene( bool [ ], int, int );
 int getBestFitness( vector< individual > & );
@@ -38,6 +38,11 @@ void setallproduct( vector< product > & );
 
 int main()
 {
+	//Enable test of functions
+	bool testingselectInd = false;
+	
+	
+	
 	int mutationRate = 10; //
 	int ring = 3; //
 	int sizePopulation = 4;
@@ -70,7 +75,7 @@ int main()
 		{
 			cout << "Iniciar processo de selecao\n";
 			print( popDecod, false );
-			selectInd( popDecod, selectedIndividuals, ring  );
+			selectInd( popDecod, selectedIndividuals, ring, testingselectInd  );
 			//crossGene( );
 			//mutateGene( );
 			
@@ -154,7 +159,7 @@ bool generateGene()
 		else return true;
 }
 
-void selectInd( vector< individual > &popDecod, vector< int > &selectedIndividuals,  int ring )
+void selectInd( vector< individual > &popDecod, vector< int > &selectedIndividuals,  int ring, bool isTesting )
 {
 	int test;
 	int n;
@@ -166,21 +171,33 @@ void selectInd( vector< individual > &popDecod, vector< int > &selectedIndividua
 			winner = rand( ) % popDecod.size( );			
 			while( n > 0 )
 			{	
-				cout << "Ganhador ateh aqui " << winner << '\t' << "Seu fitness " << popDecod[ winner ].fitness << '\n';
-				cout << "Disputa " << n << '\n';
+				if( isTesting )
+				{
+					cout << "Ganhador ateh aqui " << winner << '\t' << "Seu fitness " << popDecod[ winner ].fitness << '\n';
+					cout << "Disputa " << n << '\n';
+				}
 				competitor = rand( ) % popDecod.size( );
-				cout << "Competidor " << competitor << '\t' << "Seu fitness " << popDecod[ competitor ].fitness << '\n';
-				cin >> test;
+				if( isTesting )
+				{
+					cout << "Competidor " << competitor << '\t' << "Seu fitness " << popDecod[ competitor ].fitness << '\n';
+					cin >> test;
+				}
 				if( popDecod[ competitor ].fitness > popDecod[ winner ].fitness )
 				{
-					cout << "Competidor ganhou\n";
 					winner = competitor;
-					cin >> test;
+					if( isTesting ) 
+					{
+						cout << "Competidor ganhou\n";
+						cin >> test;
+					}
 				}
 				else 
 				{
-					cout << "Competidor perdeu\n";				
-					cin >> test;
+					if( isTesting ) 
+					{
+						cout << "Competidor perdeu\n";				
+						if( isTesting ) cin >> test;
+					}
 				}
 				
 				n--;
@@ -189,11 +206,14 @@ void selectInd( vector< individual > &popDecod, vector< int > &selectedIndividua
 			
 			selectedIndividuals[ i ] = winner;
 			
-			cout << "\n\nSelecionados ateh aqui \n";
-			for( unsigned int k = 0; k <= i; k++ )
-				cout << selectedIndividuals[ k ] << '\t';
+			if( isTesting )
+			{
+				cout << "\n\nSelecionados ateh aqui \n";
+				for( unsigned int k = 0; k <= i; k++ )
+					cout << selectedIndividuals[ k ] << '\t';
 				
-			cout << "\n\n\n\n";
+				cout << "\n\n\n\n";
+			}
 		}
 		
 		
